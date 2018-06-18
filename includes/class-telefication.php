@@ -315,23 +315,19 @@ class Telefication {
 	 *
 	 */
 	public function telefication_action_woocommerce_thankyou( $order_id ) {
-		
+
 		// Get an instance of the WC_Order object
 		$order      = wc_get_order( $order_id );
 		$order_data = $order->get_data();
 
 		$order_details = ""; //order details
 
-		#$order_details .= __( 'Name: ', 'telefication' ) . $order_data['billing']['first_name'] . " " . $order_data['billing']['last_name'] . "\n";
-		#$order_details .= __( 'City: ', 'telefication' ) . $order_data['billing']['city'] . "\n";
-		#$order_details .= __( 'Phone: ', 'telefication' ) . $order_data['billing']['phone'] . "\n";
-		#$order_details .= __( 'Total: ', 'telefication' ) . $order_data['total'];
-		
-		$order_details .= __( 'Name: ', 'telefication' ) . $order_data['shipping']['first_name'] . " " . $order_data['shipping']['last_name'] . "\n\n";
-		$order_details .=  "<b>" . $order_data['shipping']['address_1'] . ", " . $order->shipping_number . "\n" . $order_data['shipping']['address_2'] . ", " . $order->shipping_neighborhood . "\n";
-		$order_details .= $order_data['shipping']['city'] . " / " . $order_data['shipping']['state'] . "\n";
-		$order_details .= "CEP " . $order_data['shipping']['postcode'] . "</b>\n\n";
-		#$order_details .= __( 'Phone: ', 'telefication' ) . $order_data['billing']['phone'] . "\n";
+		$order_details .= __( 'Name: ', 'telefication' ) . $order_data['billing']['first_name'] . " " . $order_data['billing']['last_name'] . "\n";
+		$order_details .= __( 'City: ', 'telefication' ) . $order_data['billing']['city'] . "\n";
+		$order_details .= __( 'Phone: ', 'telefication' ) . $order_data['billing']['phone'] . "\n";
+		$order_details .= __( 'Total: ', 'telefication' ) . $order_data['total'];
+
+
 		$items = ""; // items_detail
 
 		foreach ( $order->get_items() as $item_key => $item_values ) {
@@ -341,19 +337,19 @@ class Telefication {
 			$product_name = $item_data['name'];
 			$quantity     = $item_data['quantity'];
 
-			$items .= $product_name . "\nQuantidade: <b> $quantity </b>\n";
+			$items .= "$product_name * $quantity \n";
 		}
 
 
 		//notification body
 		$message = get_bloginfo( 'name' ) . ":\n\n";
-		$message .= __( 'New order: ', 'telefication' ) . "<b>" . $order_id  . "</b>\n-----\n\n";
+		$message .= __( 'New order: ', 'telefication' ) . "\n-----\n\n";
 		$message .= $items . "\n\n";
 
 		$message .= __( 'Billing data: ', 'telefication' ) . "\n-----\n\n";
 		$message .= $order_details . "\n\n";
 
-		#$message .= site_url();
+		$message .= site_url();
 
 		$telefication_service = new Telefication_Service( $this->options );
 
